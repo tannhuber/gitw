@@ -1,0 +1,12 @@
+#!/bin/zsh
+GITWCONF="$HOME/.config/gitw/repos"
+TMPFILE=/tmp/gitw-modified-repos
+
+[[ -e $TMPFILE ]] && rm "$TMPFILE"
+for i in `cat "$GITWCONF"`
+do
+    echo "$i"
+    cd "$i"
+    git pull | grep "Already up-to-date." || print $i >> $TMPFILE
+done
+[[ -e $TMPFILE ]] && mail "$USER" -s "gitw: repositories have changed" < "$TMPFILE"
